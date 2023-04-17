@@ -61,6 +61,8 @@ def boxTest(arg):
         (tl, tr, br, bl) = box
         (tltrX, tltrY) = midpoint(tl, tr)
         (blbrX, blbrY) = midpoint(bl, br)
+        middle = midpoint((tltrX, tltrY), (blbrX, blbrY))
+        devPrint("middle: ", middle)
         # compute the midpoint between the top-left and top-right points,
         # followed by the midpoint between the top-righ and bottom-right
         (tlblX, tlblY) = midpoint(tl, bl)
@@ -94,6 +96,8 @@ def boxTest(arg):
                 "directionA": round(dA, 2),
                 "directionB": round(dB, 2),
                 "angle": round(angle, 2),
+                "midpointX": middle[0], 
+                "midpointY": middle[1],
                 "status": "error"
             })
 
@@ -102,6 +106,8 @@ def boxTest(arg):
             "directionA": round(dA, 2),
             "directionB": round(dB, 2),
             "angle": round(angle, 2),
+            "midpointX": middle[0], 
+            "midpointY": middle[1],
             "status": "success"
         }
         return json.dumps(value)
