@@ -125,7 +125,17 @@ def checkFragmentsFromArgument(path):
 
 
 def main(path):
-    return checkFragmentsFromArgument(path)
+    try:
+        return json.dumps({
+            "status": "ok",
+            "data": checkFragmentsFromArgument(path)
+        })
+    except Exception as e:
+        return json.dumps({
+            "status": "error",
+            "message": str(e),
+            "error": str(e)
+        })
 
 
 def devPrint(*arg, **kwargs):
@@ -149,5 +159,10 @@ try:
     else:
         main(args.path)
 except Exception as e:
-    devPrint("Exception thrown: ", e)
-    input("Press any key to exit...")
+    json = json.dumps({
+        "status": "error",
+        "message": str(e),
+        "error": str(e)
+    })
+    devPrint(json)
+    #input("Press any key to exit...")
