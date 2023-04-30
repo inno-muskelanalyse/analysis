@@ -12,7 +12,7 @@ This program takes a segmented image of a muscle strand as input and returns key
 
 The requirements can be installed from the command line using the following syntax:
 
-````
+```
 pip install -r requirements.txt
 ```
 
@@ -87,6 +87,3 @@ If the program encounters an error, the output will be in the following format:
 ```
 
 The "message" key will contain a human-readable error message, and the "error" key will contain the corresponding error code.
-
-```
-````
