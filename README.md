@@ -12,7 +12,7 @@ This program takes a segmented image of a muscle strand as input and returns key
 
 The requirements can be installed from the command line using the following syntax:
 
-```
+```bash
 pip install -r requirements.txt
 ```
 
@@ -20,13 +20,13 @@ pip install -r requirements.txt
 
 The program can be called from the command line using the following syntax:
 
-```
+```bash
 python main.py <path-to-segmented-image>
 ```
 
 Alternatively, you can use the following command to run the program in "development" mode, which will display the output to the console:
 
-```
+```bash
 python main.py -d path <path-to-segmented-image>
 ```
 
@@ -38,7 +38,7 @@ The program returns a JSON object with two possible values for the "status" key:
 
 If the program runs successfully and is able to detect the muscle strand, the output will be in the following format:
 
-```
+```JSON
 {
   "status": "ok",
   "data": {
@@ -57,7 +57,7 @@ The values for "directionA", "directionB", "angle", "midpointX", and "midpointY"
 
 If the program runs successfully, but is unable to detect the muscle strand, the output will be in the following format:
 
-```
+```JSON
 {
   "status": "ok",
   "data": {
@@ -78,7 +78,7 @@ In this case, the "status" key in the main JSON object will be "ok", but the "st
 
 If the program encounters an error, the output will be in the following format:
 
-```
+```JSON
 {
   "status": "error",
   "message": "<error-message>",
