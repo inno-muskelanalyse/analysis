@@ -24,7 +24,7 @@ The program can be called from the command line using the following syntax:
 python main.py <path-to-segmented-image>
 ```
 
-Alternatively, you can use the following command to run the program in "development" mode, which will display output to the console:
+Alternatively, you can use the following command to run the program in "development" mode, which will display the output to the console:
 
 ```
 python main.py -d path <path-to-segmented-image>
@@ -32,9 +32,9 @@ python main.py -d path <path-to-segmented-image>
 
 ## Output
 
-The program returns a JSON object with two possible values for the "status" key: "success" or "error".
+The program returns a JSON object with two possible values for the "status" key: "ok" or "error".
 
-### Success
+### OK
 
 If the program runs successfully and is able to detect the muscle strand, the output will be in the following format:
 
@@ -55,22 +55,6 @@ If the program runs successfully and is able to detect the muscle strand, the ou
 
 The values for "directionA", "directionB", "angle", "midpointX", and "midpointY" will be numeric values representing the detected parameters for the muscle strand.
 
-### Error
-
-If the program encounters an error, the output will be in the following format:
-
-```
-{
-  "status": "error",
-  "message": "<error-message>",
-  "error": "<error>"
-}
-```
-
-The "message" key will contain a human-readable error message, and the "error" key will contain the corresponding error code.
-
-### Partial Success
-
 If the program runs successfully, but is unable to detect the muscle strand, the output will be in the following format:
 
 ```
@@ -89,4 +73,20 @@ If the program runs successfully, but is unable to detect the muscle strand, the
 ```
 
 In this case, the "status" key in the main JSON object will be "ok", but the "status" key in the "data" sub-object will be "error".
+
+### Error
+
+If the program encounters an error, the output will be in the following format:
+
+```
+{
+  "status": "error",
+  "message": "<error-message>",
+  "error": "<error>"
+}
+```
+
+The "message" key will contain a human-readable error message, and the "error" key will contain the corresponding error code.
+
+```
 ````
