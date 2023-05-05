@@ -74,8 +74,8 @@ def boxTest(arg):
                  (255, 0, 255), 1)
 
         if args.development:
-            # cv2.imshow("Image", orig)
-            # cv2.waitKey(0)
+            cv2.imshow("Image", orig)
+            cv2.waitKey(0)
             cv2.imwrite(arg + "box.png", orig)
         dA = dist.euclidean((tltrX, tltrY), (blbrX, blbrY))
         dB = dist.euclidean((tlblX, tlblY), (trbrX, trbrY))
@@ -91,7 +91,7 @@ def boxTest(arg):
             devPrint("shape 1: ", image.shape[1])
             devPrint("dA: ", dA)
             devPrint("dB: ", dB)
-            return json.dumps({
+            value = json.dumps({
                 "path": arg,
                 "directionA": round(dA, 2),
                 "directionB": round(dB, 2),
@@ -117,11 +117,12 @@ def checkFragmentsFromArgument(path):
     img = cv2.imread(path)
     if img is not None:
         try:
-            return boxTest(path)
+            return boxTest(path, img)
         except Exception as e:
             devPrint("Exception thrown: ", e)
+            raise Exception(e)
     else:
-        raise Exception("File not an image: " + path)
+        raise Exception("Image could not be read: " + path)
 
 
 def main(path):
@@ -157,7 +158,7 @@ try:
     if args.development:
         devPrint(main(args.path))
     else:
-        main(args.path)
+        sys.stdout.write(main(args.path))
 except Exception as e:
     json = json.dumps({
         "status": "error",
