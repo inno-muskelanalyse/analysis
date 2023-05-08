@@ -26,8 +26,7 @@ def midpoint(ptA, ptB):
     return ((ptA[0] + ptB[0]) * 0.5, (ptA[1] + ptB[1]) * 0.5)
 
 
-def boxTest(arg):
-    image = cv2.imread(arg)
+def boxTest(arg, image):
     edged = cv2.Canny(image, 50, 100)
     # close gaps between object edges
     edged = cv2.dilate(edged, None, iterations=1)
@@ -110,7 +109,7 @@ def boxTest(arg):
             "midpointY": middle[1],
             "status": "success"
         }
-        return json.dumps(value)
+        return value
 
 
 def checkFragmentsFromArgument(path):
