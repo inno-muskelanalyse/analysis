@@ -25,18 +25,102 @@ def getDirection(p1, p2):
 def midpoint(ptA, ptB):
     return ((ptA[0] + ptB[0]) * 0.5, (ptA[1] + ptB[1]) * 0.5)
 
+def fillSideGaps(image):
+    x = 0
+    y = 0
+    points = []
+    colBefore = 0
+    while x < image.shape[0]-1:
+        if image[x][y] == 255 and colBefore == 0:
+            points.append((y,x))
+            #start = (x,y)
+        colBefore = image[x][y]
+        x += 1
+        #devPrint("x: ", x)
+        #devPrint("y: ", y)
+    devPrint("points: ", points)
+    #image = cv2.line(image, (0,0), (200,200), 255, 5)
+    if len(points) > 0:
+        image = cv2.line(image, points[0], points[len(points)-1], 255, 1)
+    #image = cv2.line(image, points[0], points[1], 255, 5)
+    if args.development:
+        cv2.imshow("Image", image)
+        cv2.waitKey(0)
+        cv2.imwrite("edged.png", image)
+    points.clear()
+    while y < image.shape[1]-1:
+        if image[x][y] == 255 and colBefore == 0:
+            points.append((y,x))
+            #start = (x,y)
+        colBefore = image[x][y]
+        y += 1
+        #devPrint("x: ", x)
+        #devPrint("y: ", y)
+    if len(points) > 0:
+        image = cv2.line(image, points[0], points[len(points)-1], 255, 1)
+    #image = cv2.line(image, points[0], points[1], 255, 5)
+    if args.development:
+        cv2.imshow("Image", image)
+        cv2.waitKey(0)
+        cv2.imwrite("edged.png", image)
+    points.clear()
+    while x >= 0:
+        if image[x][y] == 255 and colBefore == 0:
+            points.append((y,x))
+            #start = (x,y)
+        colBefore = image[x][y]
+        x -= 1
+        #devPrint("x: ", x)
+        #devPrint("y: ", y)
+    if len(points) > 0:
+        image = cv2.line(image, points[0], points[len(points)-1], 255, 1)
+    #image = cv2.line(image, points[0], points[1], 255, 5)
+    if args.development:
+        cv2.imshow("Image", image)
+        cv2.waitKey(0)
+        cv2.imwrite("edged.png", image)
+    points.clear()
+    while y >= 0:
+        if image[x][y] == 255 and colBefore == 0:
+            points.append((y,x))
+            #start = (x,y)
+        colBefore = image[x][y]
+        y -= 1
+        #devPrint("x: ", x)
+        #devPrint("y: ", y)
+    if len(points) > 0:
+        image = cv2.line(image, points[0], points[len(points)-1], 255, 1)
+    #image = cv2.line(image, points[0], points[1], 255, 5)
+    if args.development:
+        cv2.imshow("Image", image)
+        cv2.waitKey(0)
+        cv2.imwrite("edged.png", image)
+    points.clear()
+    return image
 
-def boxTest(arg):
-    image = cv2.imread(arg)
+
+def boxTest(arg, image):
     edged = cv2.Canny(image, 50, 100)
     # close gaps between object edges
     edged = cv2.dilate(edged, None, iterations=1)
     edged = cv2.erode(edged, None, iterations=1)
+    if args.development:
+        cv2.imshow("Image", edged)
+        cv2.waitKey(0)
+        cv2.imwrite(arg + "edged.png", edged)
+    edged = fillSideGaps(edged)
+    if args.development:
+        cv2.imshow("Image", edged)
+        cv2.waitKey(0)
+        cv2.imwrite(arg + "edged.png", edged)
     # konturen finden
     cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL,
                             cv2.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)
+
     (cnts, _) = contours.sort_contours(cnts)
+    devPrint("cnts: ", cnts)
+
     for c in cnts:
         # if the contour is not sufficiently large, ignore it
         if cv2.contourArea(c) < 1:
@@ -100,17 +184,17 @@ def boxTest(arg):
                 "midpointY": middle[1],
                 "status": "error"
             })
-
-        value = {
-            "path": arg,
-            "directionA": round(dA, 2),
-            "directionB": round(dB, 2),
-            "angle": round(angle, 2),
-            "midpointX": middle[0], 
-            "midpointY": middle[1],
-            "status": "success"
-        }
-        return json.dumps(value)
+        else:
+            value = json.dumps({
+                "path": arg,
+                "directionA": round(dA, 2),
+                "directionB": round(dB, 2),
+                "angle": round(angle, 2),
+                "midpointX": middle[0], 
+                "midpointY": middle[1],
+                "status": "success"
+            })
+    return value
 
 
 def checkFragmentsFromArgument(path):
@@ -143,18 +227,14 @@ def devPrint(*arg, **kwargs):
     if args.development:
         print(*arg, **kwargs)
 
-
 try:
     parser = argparse.ArgumentParser(description='Pass the path to the image')
     parser.add_argument('path', type=str)
     parser.add_argument("-d", "--development",
                         help="enable Dev mode", default=False, required=False)
-
     args = parser.parse_args()
-
     devPrint("Arguments: ", args)
     devPrint("System Arguments: ", sys.argv)
-
     if args.development:
         devPrint(main(args.path))
     else:
