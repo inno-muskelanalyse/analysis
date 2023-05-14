@@ -185,7 +185,7 @@ def boxTest(arg, image):
                 "status": "error"
             })
         else:
-            value = json.dumps({
+            value = {
                 "path": arg,
                 "directionA": round(dA, 2),
                 "directionB": round(dB, 2),
@@ -193,8 +193,9 @@ def boxTest(arg, image):
                 "midpointX": middle[0], 
                 "midpointY": middle[1],
                 "status": "success"
-            })
-    return value
+            }
+        return value
+
 
 
 def checkFragmentsFromArgument(path):
