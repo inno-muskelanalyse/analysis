@@ -46,7 +46,7 @@ If the program runs successfully and is able to detect the muscle strand, the ou
 {
   "status": "ok",
   "data": [
-      {
+    {
       "path": "<path-to-segmented-image>",
       "directionA": <directionA-value>,
       "directionB": <directionB-value>,
@@ -94,15 +94,17 @@ If the program runs successfully, but is unable to detect the muscle strand, the
 ```JSON
 {
   "status": "ok",
-  "data": [{
-    "path": "<path-to-segmented-image>",
-    "directionA": <directionA-value>,
-    "directionB": <directionB-value>,
-    "angle": <angle-value>,
-    "midpointX": <midpointX-value>,
-    "midpointY": <midpointY-value>,
-    "status": "error"
-  }]
+  "data": [
+    {
+      "path": "<path-to-segmented-image>",
+      "directionA": <directionA-value>,
+      "directionB": <directionB-value>,
+      "angle": <angle-value>,
+      "midpointX": <midpointX-value>,
+      "midpointY": <midpointY-value>,
+      "status": "error"
+    }
+  ]
 }
 ```
 
