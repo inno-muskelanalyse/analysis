@@ -210,11 +210,14 @@ def checkFragmentsFromArgument(path):
         raise Exception("Image could not be read: " + path)
 
 
-def main(path):
+def main():
     try:
+        returnvalue = []
+        for path in args.path:
+            returnvalue.append(checkFragmentsFromArgument(path))
         return json.dumps({
             "status": "ok",
-            "data": checkFragmentsFromArgument(path)
+            "data": returnvalue
         })
     except Exception as e:
         return json.dumps({
@@ -230,16 +233,16 @@ def devPrint(*arg, **kwargs):
 
 try:
     parser = argparse.ArgumentParser(description='Pass the path to the image')
-    parser.add_argument('path', type=str)
+    parser.add_argument('path', type=str, nargs='+')
     parser.add_argument("-d", "--development",
                         help="enable Dev mode", default=False, required=False)
     args = parser.parse_args()
     devPrint("Arguments: ", args)
     devPrint("System Arguments: ", sys.argv)
     if args.development:
-        devPrint(main(args.path))
+        devPrint(main())
     else:
-        sys.stdout.write(main(args.path))
+        sys.stdout.write(main())
 except Exception as e:
     json = json.dumps({
         "status": "error",
