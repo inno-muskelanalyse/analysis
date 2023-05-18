@@ -22,12 +22,16 @@ The program can be called from the command line using the following syntax:
 
 ```bash
 python main.py <path-to-segmented-image>
+python main.py <path-to-segmented-image> <path-to-segmented-image> <path-to-segmented-image>
 ```
+
+It can be called with just one or multiple paths.
 
 Alternatively, you can use the following command to run the program in "development" mode, which will display the output to the console:
 
 ```bash
 python main.py -d path <path-to-segmented-image>
+python main.py -d path <path-to-segmented-image> <path-to-segmented-image> <path-to-segmented-image>
 ```
 
 ## Output
@@ -41,15 +45,45 @@ If the program runs successfully and is able to detect the muscle strand, the ou
 ```JSON
 {
   "status": "ok",
-  "data": {
-    "path": "<path-to-segmented-image>",
-    "directionA": <directionA-value>,
-    "directionB": <directionB-value>,
-    "angle": <angle-value>,
-    "midpointX": <midpointX-value>,
-    "midpointY": <midpointY-value>,
-    "status": "success"
-  }
+  "data": [
+      {
+      "path": "<path-to-segmented-image>",
+      "directionA": <directionA-value>,
+      "directionB": <directionB-value>,
+      "angle": <angle-value>,
+      "midpointX": <midpointX-value>,
+      "midpointY": <midpointY-value>,
+      "status": "success"
+    }
+  ]
+}
+```
+
+Or for multiple images:
+
+```JSON
+{
+  "status": "ok",
+  "data": [
+    {
+      "path": "<path-to-segmented-image>",
+      "directionA": <directionA-value>,
+      "directionB": <directionB-value>,
+      "angle": <angle-value>,
+      "midpointX": <midpointX-value>,
+      "midpointY": <midpointY-value>,
+      "status": "success"
+    },
+    {
+      "path": "<path-to-segmented-image>",
+      "directionA": <directionA-value>,
+      "directionB": <directionB-value>,
+      "angle": <angle-value>,
+      "midpointX": <midpointX-value>,
+      "midpointY": <midpointY-value>,
+      "status": "success"
+    }
+  ]
 }
 ```
 
@@ -60,7 +94,7 @@ If the program runs successfully, but is unable to detect the muscle strand, the
 ```JSON
 {
   "status": "ok",
-  "data": {
+  "data": [{
     "path": "<path-to-segmented-image>",
     "directionA": <directionA-value>,
     "directionB": <directionB-value>,
@@ -68,7 +102,7 @@ If the program runs successfully, but is unable to detect the muscle strand, the
     "midpointX": <midpointX-value>,
     "midpointY": <midpointY-value>,
     "status": "error"
-  }
+  }]
 }
 ```
 
