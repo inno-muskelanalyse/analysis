@@ -9,11 +9,22 @@ import math
 import sys
 import json
 import argparse
+import time
+import cv2
+import numpy as np
 
+def count_white_pixels(image, threshold = 200):
+    if len(image.shape) > 2:
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    
+    binary_image = np.where(image > threshold, 255, 0).astype(np.uint8)
+    white_pixel_count = cv2.countNonZero(binary_image)
+    
+    return white_pixel_count
 
 def getDirection(p1, p2):
-    devPrint("p1: ", p1)
-    devPrint("p2: ", p2)
+    #devPrint("p1: ", p1)
+    #devPrint("p2: ", p2)
 
     if p1[0] == p2[0]:
         return 90
@@ -38,15 +49,15 @@ def fillSideGaps(image):
         x += 1
         #devPrint("x: ", x)
         #devPrint("y: ", y)
-    devPrint("points: ", points)
+    #devPrint("points: ", points)
     #image = cv2.line(image, (0,0), (200,200), 255, 5)
     if len(points) > 0:
         image = cv2.line(image, points[0], points[len(points)-1], 255, 1)
     #image = cv2.line(image, points[0], points[1], 255, 5)
-    if args.development:
-        cv2.imshow("Image", image)
-        cv2.waitKey(0)
-        cv2.imwrite("edged.png", image)
+    #if args.development:
+        #cv2.imshow("Image", image)
+        #cv2.waitKey(0)
+        #cv2.imwrite("edged.png", image)
     points.clear()
     while y < image.shape[1]-1:
         if image[x][y] == 255 and colBefore == 0:
@@ -59,10 +70,10 @@ def fillSideGaps(image):
     if len(points) > 0:
         image = cv2.line(image, points[0], points[len(points)-1], 255, 1)
     #image = cv2.line(image, points[0], points[1], 255, 5)
-    if args.development:
-        cv2.imshow("Image", image)
-        cv2.waitKey(0)
-        cv2.imwrite("edged.png", image)
+    #if args.development:
+        #cv2.imshow("Image", image)
+        #cv2.waitKey(0)
+        #cv2.imwrite("edged.png", image)
     points.clear()
     while x >= 0:
         if image[x][y] == 255 and colBefore == 0:
@@ -75,10 +86,10 @@ def fillSideGaps(image):
     if len(points) > 0:
         image = cv2.line(image, points[0], points[len(points)-1], 255, 1)
     #image = cv2.line(image, points[0], points[1], 255, 5)
-    if args.development:
-        cv2.imshow("Image", image)
-        cv2.waitKey(0)
-        cv2.imwrite("edged.png", image)
+    #if args.development:
+        #cv2.imshow("Image", image)
+        #cv2.waitKey(0)
+        #cv2.imwrite("edged.png", image)
     points.clear()
     while y >= 0:
         if image[x][y] == 255 and colBefore == 0:
@@ -91,35 +102,45 @@ def fillSideGaps(image):
     if len(points) > 0:
         image = cv2.line(image, points[0], points[len(points)-1], 255, 1)
     #image = cv2.line(image, points[0], points[1], 255, 5)
-    if args.development:
-        cv2.imshow("Image", image)
-        cv2.waitKey(0)
-        cv2.imwrite("edged.png", image)
+    #if args.development:
+        #cv2.imshow("Image", image)
+        #cv2.waitKey(0)
+        #cv2.imwrite("edged.png", image)
     points.clear()
     return image
 
 
 def boxTest(arg, image):
+    devPrint("image shape: ", image.shape)
+    start_time = time.time()
+    amountWhite_new = count_white_pixels(image)
+    end_time = time.time()
+    devPrint("amountWhite_new: ", amountWhite_new)
+    devPrint("NEW: time needed: ", end_time - start_time)
+
+    amount_pixel_total = image.shape[0] * image.shape[1]
+    ratio = amountWhite_new / amount_pixel_total
+
     edged = cv2.Canny(image, 50, 100)
     # close gaps between object edges
     edged = cv2.dilate(edged, None, iterations=1)
     edged = cv2.erode(edged, None, iterations=1)
-    if args.development:
-        cv2.imshow("Image", edged)
-        cv2.waitKey(0)
-        cv2.imwrite(arg + "edged.png", edged)
+    #if args.development:
+        #cv2.imshow("Image", edged)
+        #cv2.waitKey(0)
+        #cv2.imwrite(arg + "edged.png", edged)
     edged = fillSideGaps(edged)
-    if args.development:
-        cv2.imshow("Image", edged)
-        cv2.waitKey(0)
-        cv2.imwrite(arg + "edged.png", edged)
+    #if args.development:
+        #cv2.imshow("Image", edged)
+        #cv2.waitKey(0)
+        #cv2.imwrite(arg + "edged.png", edged)
     # konturen finden
     cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL,
                             cv2.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)
 
     (cnts, _) = contours.sort_contours(cnts)
-    devPrint("cnts: ", cnts)
+    # devPrint("cnts: ", cnts)
 
     for c in cnts:
         # if the contour is not sufficiently large, ignore it
@@ -146,7 +167,7 @@ def boxTest(arg, image):
         (tltrX, tltrY) = midpoint(tl, tr)
         (blbrX, blbrY) = midpoint(bl, br)
         middle = midpoint((tltrX, tltrY), (blbrX, blbrY))
-        devPrint("middle: ", middle)
+        #devPrint("middle: ", middle)
         # compute the midpoint between the top-left and top-right points,
         # followed by the midpoint between the top-righ and bottom-right
         (tlblX, tlblY) = midpoint(tl, bl)
@@ -157,10 +178,10 @@ def boxTest(arg, image):
         cv2.line(orig, (int(tlblX), int(tlblY)), (int(trbrX), int(trbrY)),
                  (255, 0, 255), 1)
 
-        if args.development:
-            cv2.imshow("Image", orig)
-            cv2.waitKey(0)
-            cv2.imwrite(arg + "box.png", orig)
+        #if args.development:
+            #cv2.imshow("Image", orig)
+            #cv2.waitKey(0)
+            #cv2.imwrite(arg + "box.png", orig)
         dA = dist.euclidean((tltrX, tltrY), (blbrX, blbrY))
         dB = dist.euclidean((tlblX, tlblY), (trbrX, trbrY))
 
@@ -171,30 +192,21 @@ def boxTest(arg, image):
 
         # check if the box we got is too small
         if dA < (image.shape[0] * 0.9) and dB < (image.shape[1]*0.9):
-            devPrint("shape 0: ", image.shape[0])
-            devPrint("shape 1: ", image.shape[1])
-            devPrint("dA: ", dA)
-            devPrint("dB: ", dB)
-            value = json.dumps({
-                "path": arg,
-                "directionA": round(dA, 2),
-                "directionB": round(dB, 2),
-                "angle": round(angle, 2),
-                "midpointX": middle[0], 
-                "midpointY": middle[1],
-                "status": "error"
-            })
+            status = "error"
         else:
-            value = {
+            status = "success"
+        
+        return {
                 "path": arg,
                 "directionA": round(dA, 2),
                 "directionB": round(dB, 2),
                 "angle": round(angle, 2),
                 "midpointX": middle[0], 
                 "midpointY": middle[1],
-                "status": "success"
+                "amountWhite": amountWhite_new,
+                "WBratio": round(ratio, 4),
+                "status": status
             }
-        return value
 
 
 
@@ -204,7 +216,7 @@ def checkFragmentsFromArgument(path):
         try:
             return boxTest(path, img)
         except Exception as e:
-            devPrint("Exception thrown: ", e)
+            #devPrint("Exception thrown: ", e)
             raise Exception(e)
     else:
         raise Exception("Image could not be read: " + path)
@@ -214,6 +226,7 @@ def main():
     try:
         returnvalue = []
         for path in args.path:
+            #devPrint("got another path?")
             returnvalue.append(checkFragmentsFromArgument(path))
         return json.dumps({
             "status": "ok",
@@ -237,8 +250,8 @@ try:
     parser.add_argument("-d", "--development",
                         help="enable Dev mode", default=False, required=False)
     args = parser.parse_args()
-    devPrint("Arguments: ", args)
-    devPrint("System Arguments: ", sys.argv)
+    #devPrint("Arguments: ", args)
+    #devPrint("System Arguments: ", sys.argv)
     if args.development:
         devPrint(main())
     else:
