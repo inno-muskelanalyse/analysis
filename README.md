@@ -53,6 +53,8 @@ If the program runs successfully and is able to detect the muscle strand, the ou
       "angle": <angle-value>,
       "midpointX": <midpointX-value>,
       "midpointY": <midpointY-value>,
+      "amountWhite": <amount-of-white-pixels>,
+      "WBratio": <ratio-white-to-black-pixels>,
       "status": "success"
     }
   ]
@@ -72,6 +74,8 @@ Or for multiple images:
       "angle": <angle-value>,
       "midpointX": <midpointX-value>,
       "midpointY": <midpointY-value>,
+      "amountWhite": <amount-of-white-pixels>,
+      "WBratio": <ratio-white-to-black-pixels>,
       "status": "success"
     },
     {
@@ -81,6 +85,8 @@ Or for multiple images:
       "angle": <angle-value>,
       "midpointX": <midpointX-value>,
       "midpointY": <midpointY-value>,
+      "amountWhite": <amount-of-white-pixels>,
+      "WBratio": <ratio-white-to-black-pixels>,
       "status": "success"
     }
   ]
@@ -102,6 +108,8 @@ If the program runs successfully, but is unable to detect the muscle strand, the
       "angle": <angle-value>,
       "midpointX": <midpointX-value>,
       "midpointY": <midpointY-value>,
+      "amountWhite": <amount-of-white-pixels>,
+      "WBratio": <ratio-white-to-black-pixels>,
       "status": "error"
     }
   ]
